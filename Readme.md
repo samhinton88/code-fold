@@ -3,7 +3,7 @@
 Let your codebase write itself.
 
 ```
-yarn global add unfold-cli
+yarn global add code-fold
 ```
 
 Writing code is almost always about deciding on a __pattern__ and then the boring part is __implementing it__, `unfold` allows you to focus on the pattern and have the code write itself.

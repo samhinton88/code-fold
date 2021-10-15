@@ -28,7 +28,7 @@ unfold
 Listener folds listen for changes to particular types of syntax in locations you point them at:
 ```js
 // ./some-file.js
-// <myFirstFold downstream exported_functions />
+// <myFirstFold downstream exported_function />
 ```
 This fold will listen for any __new__ exported functions in its local directory and any lower directories, and emit an event when this occurs.
 
@@ -42,7 +42,7 @@ The `downstream` prop instructs the fold to watch all files in the local directo
 
 Using a non-self-closing fold instructs it to listen to only what is between its opening and closing tags.
 ```js
-// <myFirstFold exported_functions >
+// <myFirstFold exported_function >
 // Just watch the JavaScript in here!
 export const foo = () => {} // <-- this will trigger
 // </myFirstFold>
@@ -144,7 +144,7 @@ Copy this into your index file:
 ```js
 // utils/index.js
 
-// <newFunctionExportedBelowThis downstream exported_functions />
+// <newFunctionExportedBelowThis downstream exported_function />
 // <*newFunctionExportedBelowThis overwrite_below snippet="export { {{ name }} } from './{{ relativePath }}'"/>
 ```
 

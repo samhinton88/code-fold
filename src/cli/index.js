@@ -7,7 +7,7 @@ import yargs from 'yargs';
 const { plugins, email, password } = yargs.array('plugins').argv;
 
 (async () => {
-  if (plugins.includes('fetch-snippet')) {
+  if (plugins && plugins.includes('fetch-snippet')) {
     console.log('Log in to Fetch Snippet.')
     await fetchSnippetLogin({ email, password })
   }

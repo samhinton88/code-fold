@@ -34,6 +34,10 @@ This fold will listen for any __new__ exported functions in its local directory 
 
 `code-fold` runs queries on the ASTs for the files in your codebase, and so can distinguish between, e.g. a new function being written and a function being exported. 
 
+The util recognises all AST types that are recognised by `acorn` and `babel`, lowercased. I heartily recommend [AST Explorer](https://astexplorer.net/) for playing around and getting to know the different types.
+
+There are also a number of aliased types, e.g. `exported_function`, which are layered on top of the exisiting types. These aliases are an ongoing peice of work.
+
 The `downstream` prop instructs the fold to watch all files in the local directory and any lower directories.
 
 Using a non-self-closing fold instructs it to listen to only what is between its opening and closing tags.

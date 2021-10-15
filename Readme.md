@@ -1,4 +1,4 @@
-# Unfold
+# Code Fold
 
 Let your codebase write itself.
 
@@ -6,11 +6,11 @@ Let your codebase write itself.
 yarn global add code-fold
 ```
 
-Writing code is almost always about deciding on a __pattern__ and then the boring part is __implementing it__, `unfold` allows you to focus on the pattern and have the code write itself.
+Writing code is almost always about deciding on a __pattern__ and then the boring part is __implementing it__, `code-fold` allows you to focus on the pattern and have the code write itself.
 
-`unfold` transforms a codebase into a reactive, event driven system - it sees a change made to code as an event, a message that is emitted to all other parts of the codebase.
+`code-fold` transforms a codebase into a reactive, event driven system - it sees a change made to code as an event, a message that is emitted to all other parts of the codebase.
 
-A developer can then decide which other parts of the code should change as a result, and `unfold` will make those changes automatically.
+A developer can then decide which other parts of the code should change as a result, and `code-fold` will make those changes automatically.
 
 
 ## Usage
@@ -22,7 +22,7 @@ unfold
 
 ### Syntax
 
-`unfold` commands currently live with your code and use a JSX-like syntax.
+`code-fold` commands currently live with your code and use a JSX-like syntax.
 
 #### Listeners
 Listener folds listen for changes to particular types of syntax in locations you point them at:
@@ -32,7 +32,7 @@ Listener folds listen for changes to particular types of syntax in locations you
 ```
 This fold will listen for any __new__ exported functions in its local directory and any lower directories, and emit an event when this occurs.
 
-`unfold` runs queries on the ASTs for the files in your codebase, and so can distinguish between, e.g. a new function being written and a function being exported. 
+`code-fold` runs queries on the ASTs for the files in your codebase, and so can distinguish between, e.g. a new function being written and a function being exported. 
 
 The `downstream` prop instructs the fold to watch all files in the local directory and any lower directories.
 
@@ -112,7 +112,7 @@ export {
 // </*newFunction
 }
 ```
-Save and let `unfold` write the rest of your code:
+Save and let `code-fold` write the rest of your code:
 ```js
 // ./my-math.js
 // <newFunction arrow_function>
@@ -144,12 +144,12 @@ Copy this into your index file:
 // <*newFunctionExportedBelowThis overwrite_below snippet="export { {{ name }} } from './{{ relativePath }}'"/>
 ```
 
-And `unfold` will magically find any exported functions below or at the same level as that index, and export them.
+And `code-fold` will magically find any exported functions below or at the same level as that index, and export them.
 ## Case Study: Redux
 
 Redux is a popular, powerful state management system for front-end applications; as developers we enumerate a number of actions which describe the behaviour of the application, and we write types, reducers and action creators as the boilerplate to allow our views to access it.
 
-`unfold` allows us to declare up front "for each of my types I need this code", write the types, and let the code write itself.
+`code-fold` allows us to declare up front "for each of my types I need this code", write the types, and let the code write itself.
 
 ```js
 // ./types.js
@@ -184,7 +184,7 @@ export const authLogin = 'authLogin';
 // </newType>
 ```
 
-Hit save and `unfold` writes the rest of the code for you in the way you've described it.
+Hit save and `code-fold` writes the rest of the code for you in the way you've described it.
 
 ```js
 // ./actions/user.js

@@ -22,7 +22,7 @@ unfold
 
 ### Syntax
 
-`code-fold` commands currently live with your code and use a JSX-like syntax.
+`code-fold` commands currently live with your code and use a JSX-like syntax, placed inside inline comments.
 
 #### Listeners
 Listener folds listen for changes to particular types of syntax in locations you point them at:

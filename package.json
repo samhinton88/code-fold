@@ -1,5 +1,5 @@
 {
-  "name": "unfold-cli",
+  "name": "code-fold",
   "version": "1.0.18",
   "main": "src/unfold.js",
   "author": "sam hinton <sam.hinton88@gmail.com>",

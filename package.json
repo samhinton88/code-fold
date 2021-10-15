@@ -1,6 +1,6 @@
 {
   "name": "code-fold",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "main": "src/unfold.js",
   "author": "sam hinton <sam.hinton88@gmail.com>",
   "bin": {

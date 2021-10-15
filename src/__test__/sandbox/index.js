@@ -23,52 +23,14 @@ const fooddddddo = 'fooo';
 const fof = 'sdfsdfh sl'
 // </NEW_FUNCTION>
 
-// <NEW_EXPORTED_FUNCTION exported_function unique >
-export const one = () => {};
-
+// <NEW_EXPORTED_FUNCTION exported_async_functions unique >
+export const one = async () => {};
+export const two = async () => {}
 // </NEW_EXPORTED_FUNCTION>
-// <*NEW_EXPORTED_FUNCTION fetchSnippet="newPageBoilerplate" overwrite>
 
+
+// <*NEW_EXPORTED_FUNCTION snippet="describe('{{ name }}', () => {})" overwrite>
+describe('one', () => {})
+describe('two', () => {})
 // </*NEW_EXPORTED_FUNCTION>
 
-// <*NEW_FUNCTION snippet="describe('{{ name }}', () => {})" overwrite>
-describe('one', () => {})
-describe('two', () => {})
-describe('fooddddddo', () => {})
-describe('fof', () => {})
-// </*NEW_FUNCTION>
-
-describe('one', () => {})
-describe('two', () => {})
-describe('fooddddddo', () => {})
-describe('fof', () => {})
-describe('one', () => {})
-describe('two', () => {})
-describe('fooddddddo', () => {})
-describe('fof', () => {})
-describe('one', () => {})
-describe('two', () => {})
-describe('fooddddddo', () => {})
-describe('fof', () => {})
-describe('one', () => {})
-describe('two', () => {})
-describe('fooddddddo', () => {})
-describe('fof', () => {})
-// <*NEW_FUNCTION snippet="describe('{{ name }}', () => {})" push_up/>
-// <*NEW_FUNCTION snippet="describe('{{ name }}', () => {})" push_down/>
-describe('one', () => {})
-describe('two', () => {})
-describe('fooddddddo', () => {})
-describe('fof', () => {})
-describe('one', () => {})
-describe('two', () => {})
-describe('fooddddddo', () => {})
-describe('fof', () => {})
-describe('one', () => {})
-describe('two', () => {})
-describe('fooddddddo', () => {})
-describe('fof', () => {})
-describe('one', () => {})
-describe('two', () => {})
-describe('fooddddddo', () => {})
-describe('fof', () => {})

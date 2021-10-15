@@ -36,7 +36,16 @@ This fold will listen for any __new__ exported functions in its local directory 
 
 The util recognises all AST types that are recognised by `acorn` and `babel`, lowercased. I heartily recommend [AST Explorer](https://astexplorer.net/) for playing around and getting to know the different types.
 
+Types in singular form will return the first match in the ast, but they also support simple pluralisation - add an `'s'` to the end of a given type to return all results which match the query. 
+
 There are also a number of aliased types, e.g. `exported_function`, which are layered on top of the exisiting types. These aliases are an ongoing peice of work.
+
+Current aliases (add an 's' to the end for the plural verion):
+```
+exported_function
+arrow_function_assignment
+exported_async_function
+```
 
 The `downstream` prop instructs the fold to watch all files in the local directory and any lower directories.
 

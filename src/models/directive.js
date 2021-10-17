@@ -147,7 +147,7 @@ export class Directive {
   async doWork(event) {
     console.log(`-> ${this.toString()} doing work. ${this.bareWords}`);
     const whereFilter = this.props.where || (() => true);
-    const resultsFilteredByWhereDirective = event.result.filter(whereFilter);
+    const resultsFilteredByWhereDirective = event.result.filter(whereFilter).filter(Boolean);
 
     const source = Directive.sourceModMemo[this.sourcePath] || this.source;
 

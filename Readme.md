@@ -1,12 +1,17 @@
 # Code Fold
 
-Let your codebase write itself.
+Turn your codebase into an event-driven system.
 
 ```
 yarn global add code-fold
 ```
+Have you ever thought:
+```
+I just wish that every time I wrote a function in this file, it would just magically write all the boilerplate for a test and an export, and then import it where I want it to be.
+```
+`code-fold` could be just the thing you need to explore.
 
-Writing code is almost always about deciding on a __pattern__ and then the boring part is __implementing it__, `code-fold` allows you to focus on the pattern and have the code write itself.
+Writing code is often about deciding on a __pattern__ and the time spent __implementing it__ is a function of that pattern, `code-fold` allows you to focus on the pattern, wire your codebase up in the shape of that pattern and let the code write itself.
 
 `code-fold` transforms a codebase into a reactive, event driven system - it sees a change made to code as an event, a message that is emitted to all other parts of the codebase.
 

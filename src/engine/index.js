@@ -4,6 +4,7 @@ import { filterAsync } from "../utils/filter-async";
 import { queryController } from "../caches/controller";
 
 import { errorLogger, memo as errorLogs } from "../utils/error-logger";
+import { debounce } from "../utils/debounce";
 
 let locked = true;
 
@@ -23,8 +24,10 @@ const emitAll = async (eventsToEmit) => {
 
   for (const event of eventsToEmit) {
     console.log(`${event.toString()} emitting event.`);
+
     const consumersWhichWillDoWork = consumersDeclaredInSource
-      .filter((consumer) => consumer.isTriggeredBy(event))
+      .filter((consumer) => consumer.isTriggeredBy(event));
+      
     for (const consumer of consumersWhichWillDoWork) {
       await consumer.doWork(event)
     }
@@ -60,25 +63,19 @@ const run = async () => {
   console.log("\nEMIT:\n");
 
   await emitAll(eventsToEmit);
+
   console.log('Write query cache.')
   await queryController().write()
+
   console.log('Clean directive source cache.')
-  Directive.refreshMemo()
-  console.log('Errors')
-  console.log(errorLogs)
+  Directive.refreshMemo();
+
+
+  if (errorLogs.length) {
+    console.log('Errors')
+    console.log(errorLogs)
+  }
 };
-
-function debounce(func, timeout = 1000) {
-  let timer;
-
-  return (...args) => {
-    clearTimeout(timer);
-
-    timer = setTimeout(() => {
-      func.apply(this, args);
-    }, timeout);
-  };
-}
 
 const processChange = debounce(() => run());
 

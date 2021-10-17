@@ -6,9 +6,9 @@ Turn your codebase into an event-driven system.
 yarn global add code-fold
 ```
 Have you ever thought:
-```
-I just wish that every time I wrote a function in this file, it would just magically write all the boilerplate for a test and an export, and then import it where I want it to be.
-```
+
+> I just wish that every time I wrote a function in this file, it would just magically write all the boilerplate for a test and an export, and then import it where I want it to be.
+
 `code-fold` could be just the thing you need to explore.
 
 Writing code is often about deciding on a __pattern__ and the time spent __implementing it__ is a function of that pattern, `code-fold` allows you to focus on the pattern, wire your codebase up in the shape of that pattern and let the code write itself.

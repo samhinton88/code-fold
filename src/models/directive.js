@@ -1,6 +1,7 @@
 import path from "path";
 import Handlebars from "handlebars";
 import { writeFile, mkdir } from "../utils/io";
+import { relativePathToSource } from "../utils/relative-path-from-consumer";
 import { Modification } from "./modification";
 import { parseDirectivesFromLines, BARE_WORD_ATTRIBUTE } from "./tag-utils";
 import { scrive } from "./scrive";
@@ -75,7 +76,7 @@ export class Directive {
   async test({ codebase, cache }) {
     console.log(`TEST: ${this.toString()}`);
     // get source
-    let source, astPart, predicate, prop;
+    let source;
 
     if (this.bareWords.length === 0) return true;
 
@@ -121,8 +122,6 @@ export class Directive {
         .source.split("\n")
         .slice(start + 1, end)
         .join("\n");
-
-      astPart = this.astPart;
     }
 
     // run ast query
@@ -148,18 +147,34 @@ export class Directive {
   async doWork(event) {
     console.log(`-> ${this.toString()} doing work. ${this.bareWords}`);
     const whereFilter = this.props.where || (() => true);
+    const resultsFilteredByWhereDirective = event.result.filter(whereFilter);
+
+    const source = Directive.sourceModMemo[this.sourcePath] || this.source;
 
     if (this.props.fetchSnippet || this.props.snippet) {
-      if (this.props.fetchSnippet) {
-        let type;
+      let type, toWrite;
 
-        const source = Directive.sourceModMemo[this.sourcePath] || this.source;
+      if (!this.isSelfClosing && this.bareWords.includes("overwrite")) {
+        type = "overwrite_range";
+      } else if (this.isSelfClosing) {
+        if (this.bareWords.includes("overwrite_below")) {
+          type = "overwrite_below";
+        } else if (this.bareWords.includes("push_down")) {
+          type = "push_down";
+        } else if (this.bareWords.includes("push_up")) {
+          type = "push_up";
+        }
+      }
+
+      const templateProps = {
+        ...this.props,
+        dirPath: path.dirname(this.sourcePath),
+      };
+
+      if (this.props.fetchSnippet) {
         const res = await fetchSnippet(this.props.fetchSnippet);
 
         const fetchedSnippet = res.data;
-
-        const resultsFilteredByWhereDirective =
-          event.result.filter(whereFilter);
 
         const compiledSnippets =
           resultsFilteredByWhereDirective.length === 0
@@ -170,23 +185,13 @@ export class Directive {
                     {
                       snippetName: fetchedSnippet[0].snippetName,
                       args: {
+                        ...templateProps,
                         ...data,
-                        ...this.props,
+                        relativePath: relativePathToSource(
+                          this.sourcePath,
+                          data.sourcePath
+                        ),
                         dirPath: path.dirname(this.sourcePath),
-                        relativePath:
-                          data.sourcePath &&
-                          path.basename(
-                            path.relative(
-                              path.dirname(this.sourcePath),
-                              data.sourcePath
-                            ),
-                            path.extname(
-                              path.relative(
-                                path.dirname(this.sourcePath),
-                                data.sourcePath
-                              )
-                            )
-                          ),
                       },
                     },
                   ])
@@ -197,99 +202,48 @@ export class Directive {
           .flat()
           .filter(({ type }) => type === "WRITE");
 
+        console.log(
+          "Snippet will write ",
+          fetchSnippetWriteInstructions.length,
+          " file(s) as a side effect"
+        );
+
+        for (const writeInstruction of fetchSnippetWriteInstructions) {
+          await mkdir(path.dirname(writeInstruction.path), { recursive: true });
+          await writeFile(writeInstruction.path, writeInstruction.data);
+        }
+
         const combinedSnippets = compiledSnippets
           .filter(({ localSnippet }) => localSnippet.trim().length > 0)
           .map(({ localSnippet }) => localSnippet)
           .join("\n");
 
-        if (!this.isSelfClosing && this.bareWords.includes("overwrite")) {
-          type = "overwrite_range";
-        } else if (this.isSelfClosing) {
-          if (this.bareWords.includes("overwrite_below")) {
-            type = "overwrite_below";
-          } else if (this.bareWords.includes("push_down")) {
-            type = "push_down";
-          } else if (this.bareWords.includes("push_up")) {
-            type = "push_up";
-          }
-        }
-
-        const toWrite = new Modification({
+        toWrite = new Modification({
           type,
           content: combinedSnippets,
           index: this.index,
         }).execute(source);
-
-        await writeFile(this.sourcePath, toWrite);
-
-        console.log('Snippet will write ', fetchSnippetWriteInstructions.length, ' file(s) as a side effect')
-
-        for (const writeInstruction of fetchSnippetWriteInstructions) {
-          await mkdir(path.dirname(writeInstruction.path), { recursive: true })
-          await writeFile(writeInstruction.path, writeInstruction.data)
-        }
-
-        Directive.sourceModMemo[this.sourcePath] = toWrite;
-        return true;
       }
 
       if (this.props.snippet) {
-        // Modify inline.
-        let type;
-
-        const source = Directive.sourceModMemo[this.sourcePath] || this.source;
         const template = Handlebars.compile(this.props.snippet);
-
-        const resultsFilteredByWhereDirective =
-          event.result.filter(whereFilter);
 
         const combinedSnippets =
           resultsFilteredByWhereDirective.length === 0
             ? ""
             : resultsFilteredByWhereDirective
-                .map(({ data }) =>
-                  template({
-                    ...data,
-                    ...this.props,
-                    relativePath:
-                      data.sourcePath &&
-                      path.basename(
-                        path.relative(
-                          path.dirname(this.sourcePath),
-                          data.sourcePath
-                        ),
-                        path.extname(
-                          path.relative(
-                            path.dirname(this.sourcePath),
-                            data.sourcePath
-                          )
-                        )
-                      ),
-                  })
-                )
+                .map(({ data }) => template({ ...templateProps, ...data }))
                 .join("\n");
 
-        if (!this.isSelfClosing && this.bareWords.includes("overwrite")) {
-          type = "overwrite_range";
-        } else if (this.isSelfClosing) {
-          if (this.bareWords.includes("overwrite_below")) {
-            type = "overwrite_below";
-          } else if (this.bareWords.includes("push_down")) {
-            type = "push_down";
-          } else if (this.bareWords.includes("push_up")) {
-            type = "push_up";
-          }
-        }
-
-        const toWrite = new Modification({
+        toWrite = new Modification({
           type,
           content: combinedSnippets,
           index: this.index,
         }).execute(source);
-
-        await writeFile(this.sourcePath, toWrite);
-        Directive.sourceModMemo[this.sourcePath] = toWrite;
       }
+      await writeFile(this.sourcePath, toWrite);
+
+      Directive.sourceModMemo[this.sourcePath] = toWrite;
     }
 
     return true;

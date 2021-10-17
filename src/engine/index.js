@@ -1,3 +1,4 @@
+import path from 'path';
 import { Directive } from "../models/directive";
 import { getFlatCodebase } from "../utils/get-codebase";
 import { filterAsync } from "../utils/filter-async";
@@ -48,7 +49,6 @@ Will run test for ${producersToTest.length} event${
     producersToTest.length > 1 || producersToTest.length === 0 ? "s" : ""
   }`);
 
-
   return filterAsync(producersToTest, (e) => e.test({ codebase, cache: queryController }));
 };
 
@@ -79,12 +79,12 @@ const run = async () => {
 
 const processChange = debounce(() => run());
 
-export const onChange = (path) => {
-  console.log("change", path);
+export const onChange = (filePath) => {
+  console.log("CHANGE detected: ", path.relative(process.env.CWD, filePath));
 
   if (locked) return;
 
-  batch.push(path);
+  batch.push(filePath);
 
   processChange();
 };
@@ -93,8 +93,8 @@ export const onReady = () => {
   locked = false;
 };
 
-export const onAdd = (path) => {
-  console.log("add", path);
+export const onAdd = (filePath) => {
+  console.log("ADD filePath: ", path.relative(process.env.CWD, filePath));
 
   batch.push(path);
 

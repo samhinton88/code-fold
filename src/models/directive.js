@@ -147,7 +147,9 @@ export class Directive {
   async doWork(event) {
     console.log(`-> ${this.toString()} doing work. ${this.bareWords}`);
     const whereFilter = this.props.where || (() => true);
-    const resultsFilteredByWhereDirective = event.result.filter(whereFilter).filter(Boolean);
+    const resultsFilteredByWhereDirective = event.result
+      .filter(whereFilter)
+      .filter(Boolean);
 
     const source = Directive.sourceModMemo[this.sourcePath] || this.source;
 
@@ -232,7 +234,16 @@ export class Directive {
           resultsFilteredByWhereDirective.length === 0
             ? ""
             : resultsFilteredByWhereDirective
-                .map(({ data }) => template({ ...templateProps, ...data }))
+                .map(({ data }) =>
+                  template({
+                    ...templateProps,
+                    ...data,
+                    relativePath: relativePathToSource(
+                      this.sourcePath,
+                      data.sourcePath
+                    ),
+                  })
+                )
                 .join("\n");
 
         toWrite = new Modification({

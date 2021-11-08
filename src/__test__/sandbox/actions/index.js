@@ -1,5 +1,6 @@
 // <NEW_FUNCTION_BELOW downstream exportnameddeclarations />
 // <*NEW_FUNCTION_BELOW snippet='export { {{ name }} } from "./{{ relativePath }}"' overwrite_below/>
+export { foob } from "./index"
 export { actionUser_create } from "./user"
 export { actionUser_update } from "./user"
 export { actionUser_fetch } from "./user"
